@@ -2,6 +2,8 @@ import AnalyticsDashboard from "@/components/AnalyticsDashboard/AnalyticsDashboa
 import dbConnect from "@/lib/mongodb";
 import PatientAnamnesis from "@/models/PatientAnamnesis";
 
+export const revalidate = 30;
+
 async function getAnalyticsData() {
   await dbConnect();
 
@@ -78,7 +80,7 @@ export default async function Page() {
     <div
       style={{
         padding: "40px",
-        maxWidth: "1200px",
+        maxWidth: "1920px",
         margin: "0 auto",
         fontFamily: "sans-serif",
         background: "#f8f9fa",
