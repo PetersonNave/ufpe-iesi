@@ -5,7 +5,6 @@ import {
   AreaChart, Area
 } from 'recharts';
 
-// Sub-componente para os Gráficos de Top 5 (Para evitar repetição de código)
 const Top5Chart = ({ data, title, color, icon }: any) => (
   <div style={{ background: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
@@ -15,17 +14,15 @@ const Top5Chart = ({ data, title, color, icon }: any) => (
     
     <div style={{ height: 250 }}>
       <ResponsiveContainer width="100%" height="100%">
-        {/* layout="vertical" faz as barras deitadas */}
         <BarChart layout="vertical" data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-          {/* YAxis type="category" é crucial para barras horizontais */}
           <XAxis type="number" hide />
           <YAxis 
             dataKey="_id" 
             type="category" 
             width={120} 
             tick={{fontSize: 11}} 
-            interval={0} // Mostra todos os labels
+            interval={0} 
           />
           <Tooltip 
             cursor={{ fill: '#f4f4f4' }}
@@ -46,7 +43,6 @@ export default function AnalyticsDashboard({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       
-      {/* SEÇÃO 1: GRÁFICOS GERAIS (Lado a Lado) */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         <div style={{ background: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
           <h3 style={{ color: '#555', marginBottom: '15px' }}>Distribuição de Dor (0-10)</h3>
@@ -85,35 +81,34 @@ export default function AnalyticsDashboard({
         </div>
       </div>
 
-      {/* SEÇÃO 2: TOP 5 OCORRÊNCIAS (Grid 2x2) */}
       <h2 style={{ fontSize: '18px', color: '#666', marginTop: '10px' }}>Principais Ocorrências</h2>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         
         <Top5Chart 
           title="Queixas Principais" 
           data={topComplaint} 
-          color="#FF8042" // Laranja
+          color="#FF8042" 
           icon="🤕"
         />
 
         <Top5Chart 
           title="Histórico de Doenças" 
           data={topHistory} 
-          color="#0088FE" // Azul
+          color="#0088FE" 
           icon="📋"
         />
 
         <Top5Chart 
           title="Medicamentos Comuns" 
           data={topMedications} 
-          color="#00C49F" // Verde Água
+          color="#00C49F"
           icon="💊"
         />
 
         <Top5Chart 
           title="Objetivos do Paciente" 
           data={topGoals} 
-          color="#FFBB28" // Amarelo
+          color="#FFBB28" 
           icon="🎯"
         />
 

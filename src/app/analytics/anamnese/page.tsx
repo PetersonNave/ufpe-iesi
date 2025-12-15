@@ -2,36 +2,30 @@ import AnalyticsDashboard from "@/components/AnalyticsDashboard/AnalyticsDashboa
 import dbConnect from "@/lib/mongodb";
 import PatientAnamnesis from "@/models/PatientAnamnesis";
 
-// Função para buscar dados agregados (Server Side)
 async function getAnalyticsData() {
   await dbConnect();
 
-  // 1. KPI: Total de Fichas
   const totalDocs = await PatientAnamnesis.countDocuments();
 
-  // 2. KPI: Média de Dor Geral
-  // O aggregate é poderoso para cálculos matemáticos no banco
   const avgPainResult = await PatientAnamnesis.aggregate([
     { $group: { _id: null, avg: { $avg: "$painLevel" } } },
   ]);
   const avgPain = avgPainResult[0]?.avg ? avgPainResult[0].avg.toFixed(1) : 0;
 
-  // Função auxiliar para buscar Top 5 valores distintos de um campo específico
   async function getTop5ByField(field: string) {
     return PatientAnamnesis.aggregate([
-      { $match: { [field]: { $exists: true, $ne: "" } } }, // Ignora vazios
-      { $group: { _id: `$${field}`, count: { $sum: 1 } } }, // Agrupa pelo texto exato
-      { $sort: { count: -1 } }, // Ordena do maior para o menor
-      { $limit: 5 }, // Pega só os 5 primeiros
+      { $match: { [field]: { $exists: true, $ne: "" } } },
+      { $group: { _id: `$${field}`, count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 },
     ]);
   }
-  // 3. GRÁFICO: Distribuição de Dor (Quantos nível 1, quantos nível 10...)
+
   const painDistribution = await PatientAnamnesis.aggregate([
     { $group: { _id: "$painLevel", count: { $sum: 1 } } },
-    { $sort: { _id: 1 } }, // Ordenar do nível 0 ao 10
+    { $sort: { _id: 1 } },
   ]);
 
-  // 4. GRÁFICO: Volume por Dia (Últimos 7 dias)
   const dailyVolume = await PatientAnamnesis.aggregate([
     {
       $match: {
@@ -49,7 +43,6 @@ async function getAnalyticsData() {
     { $sort: { _id: 1 } },
   ]);
 
-  // 5. LISTA: Últimas 5 entradas para inspeção rápida
   const recentEntries = await PatientAnamnesis.find()
     .sort({ createdAt: -1 })
     .limit(5)
@@ -79,7 +72,6 @@ async function getAnalyticsData() {
 export default async function Page() {
   const data = await getAnalyticsData();
 
-  // Serializar os dados para passar pro Client Component (MongoDB retorna objetos complexos)
   const serializedData = JSON.parse(JSON.stringify(data));
 
   return (
@@ -100,7 +92,6 @@ export default async function Page() {
         </p>
       </div>
 
-      {/* --- CARDS DE KPIs (Indicadores Chave) --- */}
       <div
         style={{
           display: "grid",
@@ -130,7 +121,6 @@ export default async function Page() {
         />
       </div>
 
-      {/* --- GRÁFICOS --- */}
       <AnalyticsDashboard
         painDistribution={data.painDistribution}
         dailyVolume={data.dailyVolume}
@@ -140,7 +130,6 @@ export default async function Page() {
         topGoals={data.topGoals}
       />
 
-      {/* --- TABELA RECENTE --- */}
       <div
         style={{
           marginTop: "30px",
@@ -200,7 +189,6 @@ export default async function Page() {
   );
 }
 
-// Pequeno componente auxiliar para os Cards
 function KpiCard({ title, value, icon, color = "#333" }: any) {
   return (
     <div

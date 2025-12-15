@@ -3,7 +3,6 @@ import FullAnalyticsDashboard from "@/components/FullAnalyticsDashboard/FullAnal
 import dbConnect from "@/lib/mongodb";
 import NeighborhoodMap from "@/components/NeighborhoodMap/NeighborhoodMap";
 
-// Helper para buscar Top 5 de qualquer campo (ignora vazios)
 async function getTop5(field: string) {
   return PatientAnalytics.aggregate([
     { $match: { [field]: { $exists: true, $ne: "" } } },
@@ -20,9 +19,6 @@ async function getAnalyticsData() {
 
   const totalPatients = await PatientAnalytics.countDocuments();
 
-  // --- SESSÃO 1: DEMOGRAFIA ---
-
-  // Faixas Etárias (0-18, 19-30, 31-45, 46-60, 60+)
   const ageStats = await PatientAnalytics.aggregate([
     {
       $bucket: {
@@ -43,7 +39,6 @@ async function getAnalyticsData() {
   const filiteredTopNeighborhoods = topNeighborhoods.map((e) => {
     return { ...e, _id: e._id.replace("/PE", "") };
   });
-  // --- SESSÃO 2: SOCIOECONÔMICO ---
 
   const SALARIO_MINIMO = 1518;
   const perCapitaStats = await PatientAnalytics.aggregate([
@@ -63,24 +58,22 @@ async function getAnalyticsData() {
     {
       $match: {
         incomeValue: { $gt: 0 },
-        residentsVal: { $gt: 0 }, // Evitar divisão por zero
+        residentsVal: { $gt: 0 },
       },
     },
     {
       $project: {
-        // Cálculo exato: Renda / Pessoas
         perCapita: { $divide: ["$incomeValue", "$residentsVal"] },
       },
     },
     {
       $group: {
         _id: null,
-        avgPerCapita: { $avg: "$perCapita" }, // Média global da per capita
+        avgPerCapita: { $avg: "$perCapita" },
       },
     },
   ]);
 
-  // Valor seguro caso não tenha dados ainda
   const avgPerCapita = perCapitaStats[0]?.avgPerCapita || 0;
 
   const incomeStats = await PatientAnalytics.aggregate([
@@ -155,37 +148,32 @@ async function getAnalyticsData() {
     },
   ]);
 
-  // 1. Estado Civil
   const maritalStats = await PatientAnalytics.aggregate([
     { $match: { "socioeconomic.maritalStatus": { $exists: true, $ne: "" } } },
     { $group: { _id: "$socioeconomic.maritalStatus", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
   ]);
 
-  // 2. Situação de Moradia (Housing Status)
   const housingStats = await PatientAnalytics.aggregate([
     { $match: { "socioeconomic.housingStatus": { $exists: true, $ne: "" } } },
     { $group: { _id: "$socioeconomic.housingStatus", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
   ]);
 
-  // 3. Tipo de Transporte
   const transportStats = await PatientAnalytics.aggregate([
     { $match: { "socioeconomic.transportType": { $exists: true, $ne: "" } } },
     { $group: { _id: "$socioeconomic.transportType", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
   ]);
-  // Vínculo UFPE (Geral)
   const ufpeCommunityStats = await PatientAnalytics.aggregate([
     {
       $group: {
-        _id: { $toUpper: "$socioeconomic.isUfpeCommunity" }, // Força uppercase para garantir (SIM/Sim/sim)
+        _id: { $toUpper: "$socioeconomic.isUfpeCommunity" },
         count: { $sum: 1 },
       },
     },
   ]);
 
-  // Vínculo UFPE (Detalhado por Tipo - APENAS quem é da comunidade)
   const ufpeLinkTypeStats = await PatientAnalytics.aggregate([
     {
       $match: {
@@ -194,34 +182,30 @@ async function getAnalyticsData() {
         },
       },
     },
-    { $match: { "socioeconomic.ufpeLinkType": { $ne: "" } } }, // Ignora vazios
+    { $match: { "socioeconomic.ufpeLinkType": { $ne: "" } } },
     { $group: { _id: "$socioeconomic.ufpeLinkType", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
   ]);
-
-  // --- SESSÃO 3: TRIAGEM ---
 
   const priorityStats = await PatientAnalytics.aggregate([
     { $group: { _id: "$triage.priority", count: { $sum: 1 } } },
   ]);
 
-  // Top 5 Campos Livres de Triagem
   const topComplaints = await getTop5("triage.complaint");
   const topReferral = await getTop5("triage.referralSource");
   const topLifestyle = await getTop5("triage.lifestyle");
   const educationStats = await PatientAnalytics.aggregate([
-    { $match: { "socioeconomic.educationLevel": { $ne: "" } } }, // Ignora vazios
+    { $match: { "socioeconomic.educationLevel": { $ne: "" } } },
     { $group: { _id: "$socioeconomic.educationLevel", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
   ]);
 
-  // 2. Distribuição por Pessoas na Casa (Agrupado numéricamente)
   const residentsStats = await PatientAnalytics.aggregate([
     { $match: { "socioeconomic.residentsCount": { $gt: 0 } } },
     { $group: { _id: "$socioeconomic.residentsCount", count: { $sum: 1 } } },
-    { $sort: { _id: 1 } }, // Ordena de 1 morador até X moradores
+    { $sort: { _id: 1 } },
   ]);
-  // Especialidades (Array unwind)
+
   const topSpecialties = await PatientAnalytics.aggregate([
     { $unwind: "$triage.specialties" },
     { $group: { _id: "$triage.specialties", count: { $sum: 1 } } },
@@ -230,18 +214,15 @@ async function getAnalyticsData() {
   ]);
   const neighborhoodDensity = await PatientAnalytics.aggregate([
     {
-      // 1. Filtra documentos que têm bairro preenchido
       $match: { "demographics.neighborhood": { $exists: true, $ne: null } },
     },
     {
-      // 2. Agrupa pelo nome do bairro e conta
       $group: {
-        _id: "$demographics.neighborhood", // Agrupa pelo valor do campo
-        count: { $sum: 1 }, // Soma 1 para cada ocorrência
+        _id: "$demographics.neighborhood",
+        count: { $sum: 1 },
       },
     },
     {
-      // 3. Opcional: Ordena do maior para o menor
       $sort: { count: -1 },
     },
   ]);
@@ -314,7 +295,7 @@ export default async function AnalyticsPage() {
           }}
           className="border rounded-lg overflow-hidden shadow-sm"
         >
-          <h2 style={{  marginBottom: "16px", fontSize: '2rem' }}>
+          <h2 style={{ marginBottom: "16px", fontSize: "2rem" }}>
             Distribuição Geográfica de Pacientes
           </h2>
           <NeighborhoodMap

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import styles from './login.module.scss'; 
-import { api } from '@/services/api';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import styles from "./login.module.scss";
+import { api } from "@/services/api";
 
 export default function LoginPage() {
   const router = useRouter();
-  
-  const [formData, setFormData] = useState({ login: '', senha: '' });
+
+  const [formData, setFormData] = useState({ login: "", senha: "" });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,36 +19,30 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      const response = await api.post('/api/login', {
+      const response = await api.post("/api/login", {
         login: formData.login,
-        senha: formData.senha
+        senha: formData.senha,
       });
 
       const data = response.data;
 
-      // 2. Extrai Token e Nome do User baseados no JSON fornecido
       const { access_token, user } = data;
       const userName = user?.name;
 
-      // 3. Guarda o Token em Cookie (Expira em 1 dia ou conforme expires_in)
-      // Usamos Cookies para facilitar futuras requisições no Next.js
-      Cookies.set('auth_token', access_token, { expires: 1 }); 
+      Cookies.set("auth_token", access_token, { expires: 1 });
 
-      // 4. Guarda o Nome no LocalStorage (como pedido "guardar o nome em algum lugar")
       if (userName) {
-        localStorage.setItem('user_name', userName);
+        localStorage.setItem("user_name", userName);
       }
 
-      // 5. Redireciona (ex: para dashboard)
-      router.push('/dashboard'); 
-
+      router.push("/dashboard");
     } catch (err: any) {
       console.error(err);
-      setError('Falha ao realizar login. Verifique suas credenciais.');
+      setError("Falha ao realizar login. Verifique suas credenciais.");
     } finally {
       setLoading(false);
     }
@@ -91,12 +85,8 @@ export default function LoginPage() {
 
           {error && <div className={styles.error}>{error}</div>}
 
-          <button 
-            type="submit" 
-            className={styles.button}
-            disabled={loading}
-          >
-            {loading ? 'Entrando...' : 'Acessar Sistema'}
+          <button type="submit" className={styles.button} disabled={loading}>
+            {loading ? "Entrando..." : "Acessar Sistema"}
           </button>
         </form>
       </div>

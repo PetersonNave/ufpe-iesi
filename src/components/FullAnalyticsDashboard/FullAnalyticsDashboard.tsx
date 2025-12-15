@@ -37,13 +37,11 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 export default function FullAnalyticsDashboard({ data }: any) {
-  // Ordenar Renda (Garante que "Até 1" venha antes de "Até 2", independente do Mongo)
   const sortedIncome = data.socioeconomic.incomeStats.sort((a: any, b: any) => {
     return INCOME_ORDER.indexOf(a._id) - INCOME_ORDER.indexOf(b._id);
   });
 
 
-  // Função para formatar labels de idade do Bucket do Mongo
   const formatAgeLabel = (val: number) => {
     if (val === 0) return "0-18";
     if (val === 19) return "19-30";
@@ -102,7 +100,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
             </ResponsiveContainer>
           </ChartCard>
 
-          {/* GRÁFICO 2: PESSOAS NA CASA (Barras Verticais) */}
           <ChartCard title="Pessoas na Residência">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data.socioeconomic.residentsStats}>
@@ -135,7 +132,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
-          {/* Pirâmide Etária */}
           <ChartCard title="Faixa Etária">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data.demographics.ageStats}>
@@ -156,7 +152,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
             </ResponsiveContainer>
           </ChartCard>
 
-          {/* Gênero */}
           <ChartCard title="Gênero">
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -245,7 +240,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
               </div>
             </div>
           </ChartCard>
-          {/* Top 5 Bairros (Barras Horizontais) */}
           <Top5BarChart
             title="Top 5 Bairros"
             data={data.demographics.topNeighborhoods}
@@ -303,7 +297,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
             gap: "24px",
           }}
         >
-          {/* Renda Familiar (Range Solicitado) */}
           <ChartCard title="Renda Familiar (Salários Mínimos)">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
@@ -334,7 +327,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
-{/* Estado Civil (NOVO - Pizza) */}
           <ChartCard title="Estado Civil">
              <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -357,7 +349,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
             </ResponsiveContainer>
           </ChartCard>
 
-          {/* Situação de Moradia (NOVO - Barras) */}
           <ChartCard title="Situação de Moradia">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data.socioeconomic.housingStats}>
@@ -370,7 +361,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
             </ResponsiveContainer>
           </ChartCard>
 
-          {/* Tipo de Transporte (NOVO - Barras) */}
           <ChartCard title="Meio de Transporte Principal">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data.socioeconomic.transportStats}>
@@ -382,7 +372,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
-          {/* Vínculo UFPE (Donut + Lista) */}
          
         </div>
       </section>
@@ -398,7 +387,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
             gap: "24px",
           }}
         >
-          {/* Prioridade */}
           <ChartCard title="Classificação de Prioridade">
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={data.triage.priorityStats}>
@@ -424,28 +412,24 @@ export default function FullAnalyticsDashboard({ data }: any) {
             </ResponsiveContainer>
           </ChartCard>
 
-          {/* Top 5 Especialidades */}
           <Top5BarChart
             title="Especialidades Requisitadas"
             data={data.triage.topSpecialties}
             color="#8884d8"
           />
 
-          {/* Top 5 Queixas */}
           <Top5BarChart
             title="Queixas Principais (Top 5)"
             data={data.triage.topComplaints}
             color="#ff6b6b"
           />
 
-          {/* Top 5 Origem */}
           <Top5BarChart
             title="Origem do Encaminhamento"
             data={data.triage.topReferral}
             color="#4ecdc4"
           />
 
-          {/* Top 5 Lifestyle */}
           <Top5BarChart
             title="Hábitos de Vida"
             data={data.triage.topLifestyle}
@@ -457,9 +441,6 @@ export default function FullAnalyticsDashboard({ data }: any) {
   );
 }
 
-// --- Sub-componentes para Limpeza do Código ---
-
-// Componente para Gráfico de Barras Horizontais (Reutilizável)
 const Top5BarChart = ({ data, title, color }: any) => (
   <div
     style={{
@@ -510,7 +491,6 @@ const Top5BarChart = ({ data, title, color }: any) => (
   </div>
 );
 
-// Componente de Cartão Simples
 const ChartCard = ({ title, children }: any) => (
   <div
     style={{
@@ -535,7 +515,6 @@ const ChartCard = ({ title, children }: any) => (
   </div>
 );
 
-// Cabeçalho de Sessão
 const SectionHeader = ({ title, icon }: any) => (
   <div
     style={{

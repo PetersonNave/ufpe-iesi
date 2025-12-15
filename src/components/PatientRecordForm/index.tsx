@@ -5,7 +5,6 @@ import { api } from '@/services/api';
 import { PatientDetail } from '@/types';
 import styles from './PatientRecordForm.module.scss';
 
-// --- Interfaces Locais ---
 type FormType = 'AVALIACAO' | 'EVOLUCAO' | 'ENCAMINHAMENTO';
 
 interface FormField {
@@ -24,7 +23,6 @@ interface FormTemplate {
   fields: FormField[];
 }
 
-// --- Definição dos Modelos NUTES ---
 const FORM_TEMPLATES: Record<FormType, FormTemplate> = {
   AVALIACAO: {
     id: 'AVALIACAO',
@@ -93,7 +91,6 @@ export default function PatientRecordForm({ patient, onClose, onSuccess }: Props
 
     const template = FORM_TEMPLATES[selectedType];
 
-    // 1. Gerar HTML (q0) conforme especificado
     let htmlContent = `<div style="font-family: Arial, sans-serif;">`;
     htmlContent += `<h3 style="color: #17af95;">${template.title}</h3>`;
     template.fields.forEach(field => {
@@ -102,14 +99,12 @@ export default function PatientRecordForm({ patient, onClose, onSuccess }: Props
     });
     htmlContent += `</div>`;
 
-    // 2. Formatar Data
     const now = new Date();
     const formattedDate = now.toLocaleString('pt-BR', { 
       day: '2-digit', month: '2-digit', year: 'numeric', 
       hour: '2-digit', minute: '2-digit' 
     }).replace(',', ''); 
 
-    // 3. Payload da Requisição
     const payload = {
       dataatendimento: formattedDate,
       q0: htmlContent,
@@ -130,7 +125,6 @@ export default function PatientRecordForm({ patient, onClose, onSuccess }: Props
     }
   };
 
-  // --- RENDER: Passo 1 (Seleção) ---
   if (step === 'SELECT') {
     return (
       <div className={styles.container}>
@@ -159,7 +153,6 @@ export default function PatientRecordForm({ patient, onClose, onSuccess }: Props
     );
   }
 
-  // --- RENDER: Passo 2 (Preenchimento) ---
   const template = FORM_TEMPLATES[selectedType!];
 
   return (

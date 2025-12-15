@@ -1,4 +1,3 @@
-// models/PatientAnamnesis.ts
 import mongoose, { Schema } from 'mongoose';
 
 const PatientAnamnesisSchema = new Schema({

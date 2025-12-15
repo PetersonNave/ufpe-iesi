@@ -1,4 +1,3 @@
-// models/PatientAnalytics.ts
 import mongoose, { Schema } from 'mongoose';
 
 const PatientAnalyticsSchema = new Schema({

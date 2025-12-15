@@ -13,7 +13,6 @@ export default function NeighborhoodMap({neighborhoodData}: {neighborhoodData: N
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
   const [stats, setStats] = useState<Record<string, number>>({});
 
-  // 1. Busca o GeoJSON (Exemplo: Recife) e os Dados do Banco
   useEffect(() => {
     async function loadData() {
       const geoResponse = await fetch('/bairros_recife.geojson'); 
