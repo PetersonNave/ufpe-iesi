@@ -58,45 +58,7 @@ export default function FullAnalyticsDashboard({ data }: any) {
       {/* ---------------- SESSÃO 1: DEMOGRÁFICA ---------------- */}
       <section>
         <SectionHeader title="1. Perfil Demográfico" icon="👤" />
-        <div style={{ marginBottom: "24px" }}>
-          <div
-            style={{
-              background: "linear-gradient(135deg, #1a365d 0%, #2a4365 100%)",
-              padding: "30px",
-              borderRadius: "12px",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              boxShadow: "0 4px 15px rgba(26, 54, 93, 0.2)",
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  margin: 0,
-                  fontSize: "1.1rem",
-                  opacity: 0.9,
-                  fontWeight: "normal",
-                }}
-              >
-                Renda Per Capita Média (Estimada)
-              </h3>
-              <p
-                style={{
-                  margin: "5px 0 0 0",
-                  fontSize: "0.9rem",
-                  opacity: 0.7,
-                }}
-              >
-                Baseado na renda familiar dividida pelo nº de moradores
-              </p>
-            </div>
-            <div style={{ fontSize: "2.5rem", fontWeight: "bold" }}>
-              {formatCurrency(data.socioeconomic.avgPerCapita)}
-            </div>
-          </div>
-        </div>
+       
         <div
           style={{
             display: "grid",
@@ -222,61 +184,7 @@ export default function FullAnalyticsDashboard({ data }: any) {
               </PieChart>
             </ResponsiveContainer>
           </ChartCard>
-
-          {/* Top 5 Bairros (Barras Horizontais) */}
-          <Top5BarChart
-            title="Top 5 Bairros"
-            data={data.demographics.topNeighborhoods}
-            color="#0088FE"
-          />
-        </div>
-      </section>
-
-      {/* ---------------- SESSÃO 2: SOCIOECONÔMICA ---------------- */}
-      <section>
-        <SectionHeader title="2. Análise Socioeconômica" icon="💰" />
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-            gap: "24px",
-          }}
-        >
-          {/* Renda Familiar (Range Solicitado) */}
-          <ChartCard title="Renda Familiar (Salários Mínimos)">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={sortedIncome}
-                layout="vertical"
-                margin={{ left: 40 }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  horizontal
-                  vertical={false}
-                />
-                <XAxis type="number" hide />
-                <YAxis
-                  dataKey="_id"
-                  type="category"
-                  width={100}
-                  style={{ fontSize: "12px" }}
-                />
-                <Tooltip cursor={{ fill: "transparent" }} />
-                <Bar
-                  dataKey="count"
-                  fill="#FFBB28"
-                  radius={[0, 4, 4, 0]}
-                  barSize={30}
-                  label={{ position: "right", fill: "#666" }}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartCard>
-
-          {/* Vínculo UFPE (Donut + Lista) */}
-          <ChartCard title="Comunidade UFPE vs Externo">
+ <ChartCard title="Comunidade UFPE vs Externo">
             <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
               <div style={{ width: "50%", height: 250 }}>
                 <ResponsiveContainer>
@@ -337,6 +245,145 @@ export default function FullAnalyticsDashboard({ data }: any) {
               </div>
             </div>
           </ChartCard>
+          {/* Top 5 Bairros (Barras Horizontais) */}
+          <Top5BarChart
+            title="Top 5 Bairros"
+            data={data.demographics.topNeighborhoods}
+            color="#0088FE"
+          />
+        </div>
+      </section>
+
+      {/* ---------------- SESSÃO 2: SOCIOECONÔMICA ---------------- */}
+      <section>
+        <SectionHeader title="2. Análise Socioeconômica" icon="💰" />
+ <div style={{ marginBottom: "24px" }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, #1a365d 0%, #2a4365 100%)",
+              padding: "30px",
+              borderRadius: "12px",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              boxShadow: "0 4px 15px rgba(26, 54, 93, 0.2)",
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: "1.1rem",
+                  opacity: 0.9,
+                  fontWeight: "normal",
+                }}
+              >
+                Renda Per Capita Média (Estimada)
+              </h3>
+              <p
+                style={{
+                  margin: "5px 0 0 0",
+                  fontSize: "0.9rem",
+                  opacity: 0.7,
+                }}
+              >
+                Baseado na renda familiar dividida pelo nº de moradores
+              </p>
+            </div>
+            <div style={{ fontSize: "2.5rem", fontWeight: "bold" }}>
+              {formatCurrency(data.socioeconomic.avgPerCapita)}
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+            gap: "24px",
+          }}
+        >
+          {/* Renda Familiar (Range Solicitado) */}
+          <ChartCard title="Renda Familiar (Salários Mínimos)">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={sortedIncome}
+                layout="vertical"
+                margin={{ left: 40 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  horizontal
+                  vertical={false}
+                />
+                <XAxis type="number" hide />
+                <YAxis
+                  dataKey="_id"
+                  type="category"
+                  width={100}
+                  style={{ fontSize: "12px" }}
+                />
+                <Tooltip cursor={{ fill: "transparent" }} />
+                <Bar
+                  dataKey="count"
+                  fill="#FFBB28"
+                  radius={[0, 4, 4, 0]}
+                  barSize={30}
+                  label={{ position: "right", fill: "#666" }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+{/* Estado Civil (NOVO - Pizza) */}
+          <ChartCard title="Estado Civil">
+             <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={data.socioeconomic.maritalStats}
+                  dataKey="count"
+                  nameKey="_id"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {data.socioeconomic.maritalStats?.map((entry: any, index: number) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend verticalAlign="bottom" />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          {/* Situação de Moradia (NOVO - Barras) */}
+          <ChartCard title="Situação de Moradia">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.socioeconomic.housingStats}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="_id" style={{ fontSize: '11px' }} interval={0} />
+                <YAxis allowDecimals={false} />
+                <Tooltip cursor={{ fill: "#f4f4f4" }} />
+                <Bar dataKey="count" fill="#82ca9d" radius={[4, 4, 0, 0]} name="Pacientes" />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          {/* Tipo de Transporte (NOVO - Barras) */}
+          <ChartCard title="Meio de Transporte Principal">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.socioeconomic.transportStats}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="_id" style={{ fontSize: '11px' }} interval={0} />
+                <YAxis allowDecimals={false} />
+                <Tooltip cursor={{ fill: "#f4f4f4" }} />
+                <Bar dataKey="count" fill="#8884d8" radius={[4, 4, 0, 0]} name="Pacientes" />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+          {/* Vínculo UFPE (Donut + Lista) */}
+         
         </div>
       </section>
 
