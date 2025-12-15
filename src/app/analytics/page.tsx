@@ -1,7 +1,7 @@
+
 import PatientAnalytics from '@/models/PatientAnalytics';
 import FullAnalyticsDashboard from '@/components/FullAnalyticsDashboard/FullAnalyticsDashboard';
 import dbConnect from '@/lib/mongodb';
-import dynamic from 'next/dynamic';
 import NeighborhoodMap from '@/components/NeighborhoodMap/NeighborhoodMap';
 
 // Helper para buscar Top 5 de qualquer campo (ignora vazios)
@@ -14,6 +14,7 @@ async function getTop5(field: string) {
   ]);
 }
 
+export const revalidate = 0;
 
 async function getAnalyticsData() {
   await dbConnect();
