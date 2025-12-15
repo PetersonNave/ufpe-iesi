@@ -4,7 +4,7 @@
 }
 
 .header {
-  background-color: white;
+  background-color: rgb(23, 175, 149);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -15,24 +15,52 @@
 
 .brand {
   margin: 0;
-  color: var(--colorPrimaryDark);
+  color: #FFF;
   font-size: 1.5rem;
 }
 
 .welcome {
   font-size: 0.9rem;
-  color: #666;
+  color: #fff;
 }
 
 .logoutBtn {
-  background: transparent;
+  background: #FFF;
   border: 1px solid #ddd;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
   color: #666;
 }
+.nav {
+  display: flex;
+  gap: 20px;
+  margin-left: auto; /* Empurra a navegação para a direita se o header for flex */
+  margin-right: 20px;
+  align-items: center;
+}
 
+.navLink {
+  color: #17af95;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: opacity 0.2s;
+}
+
+.navLink:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Ajuste no header pai para garantir o alinhamento */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Garante distribuição entre logo, nav e botão sair */
+  padding: 1rem 2rem;
+  /* ... resto do seu estilo existente */
+}
 .mainContent {
   padding: 2rem;
   max-width: 1200px;

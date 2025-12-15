@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/services/api';
 import styles from './anamnese.module.scss';
+import { saveAnamnesis } from '../api/actions';
 
 // Componente interno para usar o useSearchParams com Suspense
 function AnamneseForm() {
@@ -60,6 +61,20 @@ function AnamneseForm() {
     try {
       // Usa a mesma rota solicitada
       await api.post(`/api/patients/${patientId}/ehr/document/save`, payload);
+
+
+      const mongoPayload = {
+        patientId: patientId,
+        patientName: patientName || 'Desconhecido',
+        complaint: formData.queixa,
+        history: formData.historico,
+        medications: formData.medicamentos,
+        painLevel: Number(formData.dor), 
+        goals: formData.objetivos
+      };
+
+      saveAnamnesis(mongoPayload);
+      
       setStatus('SUCCESS');
     } catch (error) {
       console.error(error);

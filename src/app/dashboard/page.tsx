@@ -7,7 +7,8 @@ import { api } from '@/services/api';
 import { Patient, PatientDetail, PatientResponse } from '@/types';
 import styles from './dashboard.module.scss';
 import PatientRecordForm from '@/components/PatientRecordForm';
-
+import Image from 'next/image';
+import Link from 'next/link';
 export default function DashboardPage() {
   const router = useRouter();
   const [modalMode, setModalMode] = useState<'INFO' | 'RECORD'>('INFO');
@@ -173,15 +174,60 @@ const handlePageChange = (newPage: number) => {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div>
-          <h1 className={styles.brand}>NUTES Fisioterapia</h1>
-          <span className={styles.welcome}>Olá, {userName}</span>
-        </div>
-        <button onClick={() => { Cookies.remove('auth_token'); router.push('/login'); }} className={styles.logoutBtn}>
-          Sair
-        </button>
-      </header>
+    <header className={styles.header}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+    <Image src="/logo_ticlinic.png" alt="Logo NUTES" quality={100} width={128} height={33} />
+    
+    <div>
+      <h1 className={styles.brand}>NUTES Fisioterapia</h1>
+      <span className={styles.welcome}>Olá, {userName}</span>
+    </div>
+  </div>
+
+  {/* Navegação Adicionada */}
+  <nav className={styles.nav}>
+    <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '10px',
+        background: "#FFF",
+        padding: '8px 16px',
+        borderRadius: '16px',
+        alignItems: 'center',
+       
+    }}>
+    <Link href="/cadastro-rapido" className={styles.navLink}>
+      Cadastro Rápido
+    </Link>
+</div>
+    <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '10px',
+        background: "#FFF",
+        padding: '8px 16px',
+        borderRadius: '16px',
+        alignItems: 'center',
+       
+    }}>
+        <Link href="/analytics"  className={styles.navLink}>
+        Dashboard Clínico
+        </Link>
+        | 
+        <Link href="/analytics/anamnese" className={styles.navLink}>
+        Painel de Anamneses
+        </Link>
+
+    </div>
+  </nav>
+
+  <button 
+    onClick={() => { Cookies.remove('auth_token'); router.push('/login'); }} 
+    className={styles.logoutBtn}
+  >
+    Sair
+  </button>
+</header>
 
       <main className={styles.mainContent}>
         <div className={styles.titleSection}>

@@ -50,3 +50,15 @@ a {
     color-scheme: dark;
   }
 }
+.label {
+  font-size: 0.875rem;
+  color: #718096;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a202c;
+  line-height: 1;
+}
